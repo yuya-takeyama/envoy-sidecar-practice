@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: service-foo
+  name: service-foo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-foo
+  template:
+    metadata:
+      labels:
+        app: service-foo
+    spec:
+      containers:
+      - image: yuyat/service-foo
+        name: service-foo
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: service-foo
+  name: service-foo
+spec:
+  ports:
+  - name: 80-4567
+    port: 80
+    protocol: TCP
+    targetPort: 4567
+  selector:
+    app: service-foo
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: service-bar
+  name: service-bar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-bar
+  template:
+    metadata:
+      labels:
+        app: service-bar
+    spec:
+      containers:
+      - image: yuyat/service-bar
+        name: service-bar
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: service-bar
+  name: service-bar
+spec:
+  ports:
+  - name: 80-8080
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: service-bar
+  type: ClusterIP
